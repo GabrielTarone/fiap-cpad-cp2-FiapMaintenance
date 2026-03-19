@@ -9,14 +9,16 @@ export function SalasProvider({ children }) {
   ]);
 
   function adicionarSala(nome) {
-    const novaSala = {
-      id: Date.now().toString(),
-      nome,
-      problemas: [],
-    };
+  const novaSala = {
+    id: Date.now().toString(),
+    nome,
+    problemas: [],
+  };
 
-    setSalas((prev) => [...prev, novaSala]);
-  }
+  setSalas((prev) => [...prev, novaSala]);
+
+  return novaSala.id;
+}
 
   function adicionarProblema(idSala, problema) {
     setSalas((prev) =>

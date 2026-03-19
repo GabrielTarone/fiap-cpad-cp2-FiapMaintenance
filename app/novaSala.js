@@ -1,12 +1,12 @@
+import { useRouter } from "expo-router";
+import { useContext, useState } from "react";
 import {
-  View,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
+  View,
 } from "react-native";
-import { useState, useContext } from "react";
-import { useRouter } from "expo-router";
 import { SalasContext } from "../context/SalasContext";
 
 export default function NovaSala() {
@@ -17,8 +17,12 @@ export default function NovaSala() {
   function adicionarSalaHandler() {
     if (!nome.trim()) return;
 
-    adicionarSala(nome);
-    router.back();
+    const id = adicionarSala(nome);
+
+    router.replace({
+      pathname: "/reportar",
+      params: { id },
+    });
   }
 
   return (
@@ -27,14 +31,14 @@ export default function NovaSala() {
 
       <TextInput
         style={styles.input}
-        placeholder="Nome da sala"
+        placeholder="Número da sala"
         placeholderTextColor="#aaa"
         value={nome}
         onChangeText={setNome}
       />
 
       <TouchableOpacity style={styles.botao} onPress={adicionarSalaHandler}>
-        <Text style={styles.botaoTexto}>Salvar</Text>
+        <Text style={styles.botaoTexto}>Cadastrar</Text>
       </TouchableOpacity>
     </View>
   );

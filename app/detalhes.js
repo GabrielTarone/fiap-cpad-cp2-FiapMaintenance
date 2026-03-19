@@ -1,8 +1,13 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useContext } from "react";
-import { SalasContext } from "../context/SalasContext";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from "react-native";
 import ProblemaItem from "../components/ProblemaItem";
+import { SalasContext } from "../context/SalasContext";
 
 export default function Detalhes() {
   const { id, nome } = useLocalSearchParams();
@@ -11,18 +16,29 @@ export default function Detalhes() {
 
   const sala = salas.find((s) => s.id === id);
 
+  // Ordenar por urgência (alta primeiro)
+  const problemasOrdenados = sala?.problemas
+    ? [...sala.problemas].sort((a, b) =>
+        a.urgencia === "alta" && b.urgencia !== "alta" ? -1 : 1,
+      )
+    : [];
+
   return (
     <View style={styles.container}>
       <Text style={styles.titulo}>{nome}</Text>
 
       {/* Lista de problemas */}
-      {sala?.problemas.length === 0 ? (
+      {problemasOrdenados.length === 0 ? (
         <Text style={styles.semProblemas}>Nenhum problema reportado</Text>
       ) : (
-        sala.problemas.map((p, index) => <ProblemaItem key={index} texto={p} />)
+        problemasOrdenados.map((p, index) => (
+          <View key={index}>
+            <ProblemaItem problema={p} />
+          </View>
+        ))
       )}
 
-      {/* Botão */}
+      {/* Botão cadastrar Problema */}
       <TouchableOpacity
         style={styles.botao}
         onPress={() =>
@@ -32,7 +48,15 @@ export default function Detalhes() {
           })
         }
       >
-        <Text style={styles.botaoTexto}>Reportar Problema</Text>
+        <Text style={styles.botaoTexto}>Cadastrar Problema</Text>
+      </TouchableOpacity>
+
+      {/* Botão reportar problema */}
+      <TouchableOpacity
+        style={styles.botao}
+        onPress={() => router.replace("/")}
+      >
+        <Text style={styles.botaoTexto}>Voltar para Home</Text>
       </TouchableOpacity>
     </View>
   );
@@ -51,5 +75,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 20,
   },
-  botaoTexto: { color: "#fff", textAlign: "center" },
+  botaoSecundario: {
+    backgroundColor: "#333",
+    padding: 15,
+    borderRadius: 10,
+    marginTop: 10,
+  },
+  botaoTexto: { color: "#fff", textAlign: "center", fontWeight: "bold" },
 });
