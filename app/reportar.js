@@ -58,7 +58,7 @@ export default function Reportar() {
         multiline
       />
 
-      {/* 🔥 Urgência */}
+      {/* Urgência */}
       <Text style={styles.label}>Urgência:</Text>
 
       <View style={styles.row}>
