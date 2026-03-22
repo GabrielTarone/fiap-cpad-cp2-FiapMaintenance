@@ -2,12 +2,7 @@
 
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useContext } from "react";
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import ProblemaItem from "../components/ProblemaItem";
 import { SalasContext } from "../context/SalasContext";
 
@@ -63,7 +58,7 @@ export default function Detalhes() {
           })
         }
       >
-        <Text style={styles.botaoTexto}>Remover Cadastro</Text>
+        <Text style={styles.botaoTexto}>Remover Problema</Text>
       </TouchableOpacity>
 
       {/* Botão voltar para Home */}

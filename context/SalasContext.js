@@ -8,18 +8,20 @@ export function SalasProvider({ children }) {
     { id: "2", nome: "Sala 202", problemas: [] },
   ]);
 
+  // Adicionar sala
   function adicionarSala(nome) {
-  const novaSala = {
-    id: Date.now().toString(),
-    nome,
-    problemas: [],
-  };
+    const novaSala = {
+      id: Date.now().toString(),
+      nome,
+      problemas: [],
+    };
 
-  setSalas((prev) => [...prev, novaSala]);
+    setSalas((prev) => [...prev, novaSala]);
 
-  return novaSala.id;
-}
+    return novaSala.id;
+  }
 
+  // Adicionar problema
   function adicionarProblema(idSala, problema) {
     setSalas((prev) =>
       prev.map((sala) =>
@@ -28,23 +30,46 @@ export function SalasProvider({ children }) {
           : sala,
       ),
     );
+  }
 
-}
-
-  function removerSalaPorNome(nome) {
+  // Remover problema
+  function removerProblema(idSala, indexProblema) {
     setSalas((prev) =>
-      prev.filter((sala) => sala.nome !== nome)
+      prev.map((sala) =>
+        sala.id === idSala
+          ? {
+              ...sala,
+              problemas: sala.problemas.filter(
+                (_, index) => index !== indexProblema,
+              ),
+            }
+          : sala,
+      ),
     );
   }
 
+  // Remover sala por escolha (versão antiga)
+  function removerSala(idSala) {
+    setSalas((prev) => prev.filter((sala) => sala.id !== idSala));
+  }
+
+  // Remover sala por nome (versão antiga)
+  function removerSalaPorNome(nome) {
+    setSalas((prev) => prev.filter((sala) => sala.nome !== nome));
+  }
 
   return (
-    <SalasContext.Provider value={{
-      salas, 
-      adicionarSala, 
-      adicionarProblema,
-      removerSalaPorNome,}}>
+    <SalasContext.Provider
+      value={{
+        salas,
+        adicionarSala,
+        adicionarProblema,
+        removerSalaPorNome,
+        removerSala, // nova versão
+        removerProblema, // antiga versão
+      }}
+    >
       {children}
     </SalasContext.Provider>
-  )
+  );
 }

@@ -36,6 +36,14 @@ export default function Home() {
     return prioridade[urgB] - prioridade[urgA];
   });
 
+  // Lista para separar com problema do sem problema
+  const salasComProblema = salasOrdenadas.filter((s) => s.problemas.length > 0);
+
+  // Lista para separar sem problema do com problema
+  const salasSemProblema = salasOrdenadas.filter(
+    (s) => s.problemas.length === 0,
+  );
+
   // Pega o problema mais urgente da sala
   function getProblemaMaisUrgente(sala) {
     if (!sala.problemas.length) return null;
@@ -51,9 +59,7 @@ export default function Home() {
 
   // Chamar o técnico por whatsapp com base na sala mais urgente
   function chamarTecnicoGeral() {
-    const salaMaisUrgente = salasOrdenadas.find(
-      (s) => s.problemas.length > 0
-    );
+    const salaMaisUrgente = salasOrdenadas.find((s) => s.problemas.length > 0);
 
     if (!salaMaisUrgente) return;
 
@@ -69,11 +75,11 @@ export default function Home() {
     <View style={styles.container}>
       <Text style={styles.titulo}>Cadastro de Manutenção</Text>
 
+      {/* Prioridades */}
       <Text style={styles.info}>Lista de Prioridades</Text>
 
-      {/* Lista de salas */}
       <FlatList
-        data={salasOrdenadas}
+        data={salasComProblema}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <SalaCard
@@ -87,7 +93,29 @@ export default function Home() {
           />
         )}
         ListEmptyComponent={
-          <Text style={styles.vazio}>Nenhuma sala cadastrada</Text>
+          <Text style={styles.vazio}>Nenhuma sala com problemas</Text>
+        }
+      />
+
+      {/* Salas sem problemas */}
+      <Text style={styles.info}>Sem problemas / Solucionados</Text>
+
+      <FlatList
+        data={salasSemProblema}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <SalaCard
+            sala={item}
+            onPress={() =>
+              router.push({
+                pathname: "/detalhes",
+                params: { id: item.id, nome: item.nome },
+              })
+            }
+          />
+        )}
+        ListEmptyComponent={
+          <Text style={styles.vazio}>Todas as salas possuem problemas</Text>
         }
       />
 
@@ -115,7 +143,6 @@ export default function Home() {
         <Text style={styles.botaoTexto}>Remover Sala</Text>
       </TouchableOpacity>
     </View>
-
   );
 }
 
