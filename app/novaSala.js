@@ -3,6 +3,7 @@
 import { useRouter } from "expo-router";
 import { useContext, useState } from "react";
 import {
+  Alert,
   StyleSheet,
   Text,
   TextInput,
@@ -19,12 +20,38 @@ export default function NovaSala() {
   function adicionarSalaHandler() {
     if (!nome.trim()) return;
 
-    const id = adicionarSala(nome);
+
+    //Antes 
+
+    /*const id = adicionarSala(nome);
 
     router.replace({
       pathname: "/reportar",
       params: { id },
-    });
+    });*/
+
+
+    //Depois
+    
+    const id = adicionarSala(nome);
+
+    Alert.alert(
+      "Sucesso",
+      "Cadastro salvo com sucesso!",
+      [
+        {
+          text: "OK",
+          onPress: () =>
+            router.replace({
+              pathname: "/reportar",
+              params: {id},
+            }),
+        },
+      ]
+    );
+
+
+
   }
 
   return (
