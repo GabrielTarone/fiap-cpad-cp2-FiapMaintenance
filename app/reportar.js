@@ -24,6 +24,7 @@ export default function Reportar() {
       computador,
       descricao,
       urgencia,
+      status: "pendente", 
       data: new Date().toISOString(),
     };
 
