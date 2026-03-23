@@ -22,7 +22,6 @@ Escolhemos trabalhar com o **gerenciamento de salas e chamados de manutenção**
 - ✅ Visualização detalhada dos problemas de cada sala
 - ✅ Remoção de problemas resolvidos
 - ✅ Remoção de salas
-- ✅ Botão de contato direto com o técnico via WhatsApp, com o problema mais urgente já preenchido na mensagem
 
 ---
 
