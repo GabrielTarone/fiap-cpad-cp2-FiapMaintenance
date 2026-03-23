@@ -133,10 +133,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#0a0a0a",
   },
   titulo: {
-    fontSize: 24,
+    fontSize: 15,
     fontWeight: "bold",
     marginBottom: 30,
-    textAlign: "center",
+    textAlign: "left",
   },
   tituloDestaque: {
     color: "#E1306C",
