@@ -38,11 +38,11 @@ export function SalasProvider({ children }) {
       prev.map((sala) =>
         sala.id === idSala
           ? {
-              ...sala,
-              problemas: sala.problemas.filter(
-                (_, index) => index !== indexProblema,
-              ),
-            }
+            ...sala,
+            problemas: sala.problemas.filter(
+              (_, index) => index !== indexProblema,
+            ),
+          }
           : sala,
       ),
     );
@@ -58,6 +58,23 @@ export function SalasProvider({ children }) {
     setSalas((prev) => prev.filter((sala) => sala.nome !== nome));
   }
 
+  // Finalizar problema
+  // Finalizar problema (remove da lista)
+  function finalizarProblema(idSala, computador) {
+    setSalas((prev) =>
+      prev.map((sala) =>
+        sala.id === idSala
+          ? {
+            ...sala,
+            problemas: sala.problemas.filter(
+              (p) => p.computador !== computador
+            ),
+          }
+          : sala
+      )
+    );
+  }
+
   return (
     <SalasContext.Provider
       value={{
@@ -67,6 +84,7 @@ export function SalasProvider({ children }) {
         removerSalaPorNome,
         removerSala, // nova versão
         removerProblema, // antiga versão
+        finalizarProblema, // nova função
       }}
     >
       {children}
