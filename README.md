@@ -1,50 +1,125 @@
-# Welcome to your Expo app
+#  FIAP Maintenance
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+> Aplicativo mobile para gerenciamento de manutenção de salas e laboratórios da FIAP.
 
-## Get started
+---
 
-1. Install dependencies
+##  Sobre o Projeto
 
-   ```bash
-   npm install
-   ```
+A FIAP possui diversos laboratórios e salas de aula com computadores e equipamentos que, frequentemente, apresentam problemas técnicos. Na prática, esses problemas muitas vezes são ignorados ou demoram muito tempo para serem resolvidos — o que prejudica professores e alunos durante as aulas.
 
-2. Start the app
+O **FIAP Maintenance** foi criado para resolver exatamente isso. O app permite que professores e responsáveis registrem problemas nos equipamentos de forma rápida, indicando o nível de urgência, e que os problemas mais críticos sejam priorizados e comunicados para os técnicos de manutenção.
 
-   ```bash
-   npx expo start
-   ```
+### Operação escolhida
 
-In the output, you'll find options to open the app in a
+Escolhemos trabalhar com o **gerenciamento de salas e chamados de manutenção**, pois é uma dor real e cotidiana dentro da instituição. A proposta é simples: substituir processos informais (como mandar mensagem no WhatsApp ou falar pessoalmente) por um sistema centralizado e visual, onde qualquer pessoa responsável pela sala consiga registrar e acompanhar os problemas.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Funcionalidades implementadas
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- ✅ Cadastro de salas e laboratórios
+- ✅ Registro de problemas por computador, com descrição e nível de urgência (Alta, Média ou Baixa)
+- ✅ Dashboard principal com salas priorizadas pelo problema mais urgente
+- ✅ Visualização detalhada dos problemas de cada sala
+- ✅ Remoção de problemas resolvidos
+- ✅ Remoção de salas
+- ✅ Botão de contato direto com o técnico via WhatsApp, com o problema mais urgente já preenchido na mensagem
 
-## Get a fresh project
+---
 
-When you're ready, run:
+##  Integrantes do Grupo
+
+| Nome Completo |
+|---------------|
+| *(insira aqui o nome completo do integrante 1)* |
+| *(insira aqui o nome completo do integrante 2)* |
+| *(insira aqui o nome completo do integrante 3)* |
+
+---
+
+##  Como Rodar o Projeto
+
+### Pré-requisitos
+
+Antes de começar, você precisa ter instalado na sua máquina:
+
+- [Node.js](https://nodejs.org/) — versão 18 ou superior
+- [Expo Go](https://expo.dev/go) — app no seu celular para visualizar o projeto (disponível na App Store e Google Play)
+- Git — para clonar o repositório
+
+### Passo a passo
+
+**1. Clone o repositório**
 
 ```bash
-npm run reset-project
+git clone https://github.com/GabrielTarone/fiap-cpad-cp1-FiapMaintenance-.git
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+**2. Acesse a pasta do projeto**
 
-## Learn more
+```bash
+cd fiap-maintenance
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+**3. Instale as dependências**
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npm install
+```
 
-## Join the community
+**4. Inicie o projeto**
 
-Join our community of developers creating universal apps.
+```bash
+npx expo start
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+**5. Abra no seu dispositivo**
+
+Após rodar o comando acima, um QR Code vai aparecer no terminal. Basta escanear com o app **Expo Go** no seu celular (Android ou iOS) e o app vai abrir automaticamente.
+
+> Também é possível rodar em emuladores Android ou simuladores iOS, caso tenha o ambiente configurado.
+
+---
+## Caso queira conhecer o app:
+youtube: https://youtube.com/shorts/nE_-UOeD_BI?feature=share
+
+##  Decisões Técnicas
+
+### Como o projeto foi estruturado
+
+O projeto foi organizado em pastas com responsabilidades bem definidas:
+
+- **`app/`** — contém todas as telas do aplicativo. Usamos o **Expo Router**, que cria as rotas automaticamente com base nos arquivos dessa pasta (cada arquivo vira uma tela).
+- **`components/`** — componentes visuais reutilizáveis, como o card de sala (`SalaCard`) e o item de problema (`ProblemaItem`), usados em múltiplas telas.
+- **`context/`** — onde fica o gerenciamento de estado global da aplicação.
+- **`constants/`** — cores e fontes usadas em todo o app.
+- **`hooks/`** — utilitários para tema e esquema de cores.
+
+### Hooks utilizados e para quê
+
+| Hook | Onde é usado | Para quê |
+|------|-------------|----------|
+| `useState` | Telas de formulário | Controla os campos digitados pelo usuário (nome da sala, descrição do problema, urgência selecionada) |
+| `useContext` | Todas as telas | Acessa o estado global de salas e problemas sem precisar passar props manualmente |
+| `useLocalSearchParams` | Telas de detalhe | Lê os parâmetros da rota (ex: ID e nome da sala) para saber qual sala foi selecionada |
+| `useColorScheme` | Hooks de tema | Detecta se o dispositivo está em modo claro ou escuro |
+
+### Como a navegação foi organizada
+
+Usamos o **Expo Router** com navegação em pilha (**Stack Navigator**). O fluxo funciona assim:
+
+```
+Home (Dashboard)
+  ├── Detalhes da Sala
+  │     ├── Reportar Problema
+  │     └── Remover Problema
+  ├── Cadastrar Nova Sala
+  └── Remover Sala
+```
+
+Cada tela é um arquivo dentro da pasta `app/`, e a navegação entre elas é feita com `router.push()` (avançar), `router.back()` (voltar) e `router.replace()` (substituir a tela atual). Parâmetros como o ID da sala são passados diretamente na URL da rota.
+
+### Gerenciamento de estado
+
+Optamos pelo **Context API** do próprio React, sem bibliotecas externas. Criamos um `SalasContext` que armazena a lista de salas e seus problemas, e disponibiliza funções para adicionar e remover dados. Todas as telas acessam esse contexto diretamente, o que mantém o código simples e sem repetição.
+
+> **Observação:** os dados são mantidos em memória enquanto o app está aberto. Ao fechar o aplicativo, as informações são resetadas (não há banco de dados ou armazenamento local nesta versão).
