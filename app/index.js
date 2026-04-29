@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import SalaCard from "../components/SalaCard";
 import { SalasContext } from "../context/SalasContext";
+import { logout } from "../services/authService";
 
 export default function Home() {
   const router = useRouter();
@@ -35,6 +36,11 @@ export default function Home() {
 
     return prioridade[urgB] - prioridade[urgA];
   });
+
+  async function handleLogout() {
+    await logout();
+    router.replace("/login");
+  }
 
   // Lista para separar com problema do sem problema
   const salasComProblema = salasOrdenadas.filter((s) => s.problemas.length > 0);
@@ -110,6 +116,10 @@ export default function Home() {
         onPress={() => router.push("/removerSala")}
       >
         <Text style={styles.botaoTexto}>Remover Sala</Text>
+      </TouchableOpacity>
+      {/* Botão Logout */}
+      <TouchableOpacity style={styles.botao} onPress={handleLogout}>
+        <Text style={styles.botaoTexto}>Logout</Text>
       </TouchableOpacity>
     </View>
   );

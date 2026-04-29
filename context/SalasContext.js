@@ -1,14 +1,59 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const SalasContext = createContext();
 
-export function SalasProvider({ children }) {
-  const [salas, setSalas] = useState([
-    { id: "1", nome: "Lab 101", problemas: [] },
-    { id: "2", nome: "Sala 202", problemas: [] },
-  ]);
+const STORAGE_KEY = "@salas";
 
-  // Adicionar sala
+export function SalasProvider({ children }) {
+  const [salas, setSalas] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+
+  // 🔹 CARREGAR ao iniciar
+  useEffect(() => {
+    carregarSalas();
+  }, []);
+
+  async function carregarSalas() {
+    try {
+      const data = await AsyncStorage.getItem(STORAGE_KEY);
+
+      if (data) {
+        setSalas(JSON.parse(data));
+      } else {
+        // dados iniciais (primeira execução)
+        const salasIniciais = [
+          { id: "1", nome: "Lab 101", problemas: [] },
+          { id: "2", nome: "Sala 202", problemas: [] },
+        ];
+
+        setSalas(salasIniciais);
+        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(salasIniciais));
+      }
+    } catch (error) {
+      console.log("Erro ao carregar salas:", error);
+    } finally {
+      setCarregando(false);
+    }
+  }
+
+  // 🔹 SALVAR automaticamente quando mudar
+  useEffect(() => {
+    if (!carregando) {
+      salvarSalas();
+    }
+  }, [salas]);
+
+  async function salvarSalas() {
+    try {
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(salas));
+    } catch (error) {
+      console.log("Erro ao salvar salas:", error);
+    }
+  }
+
+  // 🔹 Funções existentes (mantidas)
+
   function adicionarSala(nome) {
     const novaSala = {
       id: Date.now().toString(),
@@ -21,7 +66,6 @@ export function SalasProvider({ children }) {
     return novaSala.id;
   }
 
-  // Adicionar problema
   function adicionarProblema(idSala, problema) {
     setSalas((prev) =>
       prev.map((sala) =>
@@ -32,47 +76,43 @@ export function SalasProvider({ children }) {
     );
   }
 
-  // Remover problema
   function removerProblema(idSala, indexProblema) {
     setSalas((prev) =>
       prev.map((sala) =>
         sala.id === idSala
           ? {
-            ...sala,
-            problemas: sala.problemas.filter(
-              (_, index) => index !== indexProblema,
-            ),
-          }
+              ...sala,
+              problemas: sala.problemas.filter(
+                (_, index) => index !== indexProblema,
+              ),
+            }
           : sala,
       ),
     );
   }
 
-  // Remover sala por escolha (versão antiga)
   function removerSala(idSala) {
     setSalas((prev) => prev.filter((sala) => sala.id !== idSala));
   }
 
-  // Remover sala por nome (versão antiga)
-  function removerSalaPorNome(nome) {
-    setSalas((prev) => prev.filter((sala) => sala.nome !== nome));
-  }
-
-  // Finalizar problema
-  // Finalizar problema (remove da lista)
   function finalizarProblema(idSala, computador) {
     setSalas((prev) =>
       prev.map((sala) =>
         sala.id === idSala
           ? {
-            ...sala,
-            problemas: sala.problemas.filter(
-              (p) => p.computador !== computador
-            ),
-          }
-          : sala
-      )
+              ...sala,
+              problemas: sala.problemas.filter(
+                (p) => p.computador !== computador,
+              ),
+            }
+          : sala,
+      ),
     );
+  }
+
+  // 🔹 Loading global (IMPORTANTE)
+  if (carregando) {
+    return null; // evita render antes de carregar
   }
 
   return (
@@ -81,10 +121,9 @@ export function SalasProvider({ children }) {
         salas,
         adicionarSala,
         adicionarProblema,
-        removerSalaPorNome,
-        removerSala, // nova versão
-        removerProblema, // antiga versão
-        finalizarProblema, // nova função
+        removerSala,
+        removerProblema,
+        finalizarProblema,
       }}
     >
       {children}
