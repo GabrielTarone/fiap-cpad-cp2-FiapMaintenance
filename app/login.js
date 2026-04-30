@@ -1,19 +1,18 @@
-import { useState, useRef } from "react";
+import { useRouter } from "expo-router";
+import { useRef, useState } from "react";
 import {
-  View,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
-  Alert,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
+  View,
 } from "react-native";
-import { useRouter } from "expo-router";
 
 // 🔐 Importa o service
-import { login } from "../services/authService";
 
 // 🔹 Componente reutilizável
 const Campo = ({ label, erro, children }) => (
@@ -59,11 +58,10 @@ export default function Login() {
     try {
       setCarregando(true);
 
-      await login(email, senha);
-
-      Alert.alert("Sucesso", "Login realizado!");
+      console.log(email, senha);
 
       router.replace("/"); // vai pra home
+      Alert.alert("Sucesso", "Login realizado!");
     } catch (err) {
       Alert.alert("Erro", err.message || "Erro ao fazer login");
     } finally {
@@ -83,6 +81,7 @@ export default function Login() {
         <Campo label="E-mail" erro={erros.email}>
           <TextInput
             placeholder="email@exemplo.com"
+            placeholderTextColor="#888"
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
@@ -104,29 +103,27 @@ export default function Login() {
 
         {/* Senha */}
         <Campo label="Senha" erro={erros.senha}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View
+            style={[
+              styles.inputContainer,
+              erros.senha && styles.inputErro,
+              senhaValida && styles.inputValido,
+              senha && !senhaValida && styles.inputInvalido,
+            ]}
+          >
             <TextInput
               ref={senhaRef}
               placeholder="******"
+              placeholderTextColor="#888"
               value={senha}
               onChangeText={setSenha}
               secureTextEntry={!senhaVisivel}
               returnKeyType="done"
               onSubmitEditing={handleLogin}
-              style={[
-                styles.input,
-                { flex: 1 },
-                erros.senha && styles.inputErro,
-                senhaValida && { borderColor: "green", borderWidth: 2 },
-                senha &&
-                  !senhaValida && {
-                    borderColor: "red",
-                    borderWidth: 2,
-                  },
-              ]}
+              style={[styles.inputSenha, erros.senha && styles.inputErro]}
             />
             <TouchableOpacity onPress={() => setSenhaVisivel(!senhaVisivel)}>
-              <Text style={styles.olho}>{senhaVisivel ? "🙈" : "👁️"}</Text>
+              <Text style={styles.olho}>{senhaVisivel ? "👁️" : "🙈"}</Text>
             </TouchableOpacity>
           </View>
         </Campo>
@@ -157,7 +154,25 @@ const styles = StyleSheet.create({
     padding: 24,
     backgroundColor: "#0a0a0a",
     flexGrow: 1,
-    justifyContent: "center",
+  },
+
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#1a1a1a",
+    borderRadius: 10,
+    paddingHorizontal: 10,
+  },
+  inputSenha: {
+    flex: 1,
+    color: "#fff",
+    paddingVertical: 14,
+    fontSize: 16,
+  },
+  olho: {
+    fontSize: 18,
+    marginLeft: 10,
+    color: "#E1306C",
   },
   titulo: {
     fontSize: 26,
@@ -174,6 +189,15 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 10,
   },
+  inputValido: {
+    borderColor: "green",
+    borderWidth: 2,
+  },
+
+  inputInvalido: {
+    borderColor: "red",
+    borderWidth: 2,
+  },
   inputErro: { borderColor: "red", borderWidth: 1 },
   erro: { color: "red", fontSize: 12, marginTop: 4 },
   botao: {
@@ -186,10 +210,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: "center",
     fontWeight: "bold",
-  },
-  olho: {
-    padding: 14,
-    fontSize: 18,
   },
   link: {
     color: "#E1306C",

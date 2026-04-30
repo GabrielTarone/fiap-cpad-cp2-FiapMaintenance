@@ -1,3 +1,4 @@
+import { ResizeMode, Video } from "expo-av";
 import { Image, StyleSheet, Text, View } from "react-native";
 
 export default function ProblemaItem({ problema }) {
@@ -21,7 +22,12 @@ export default function ProblemaItem({ problema }) {
       )}
 
       {problema.midiaUri && problema.midiaTipo === "video" && (
-        <Text style={styles.videoTexto}>Vídeo anexado</Text>
+        <Video
+          source={{ uri: problema.midiaUri }}
+          style={styles.videoProblema}
+          useNativeControls
+          resizeMode={ResizeMode.CONTAIN}
+        />
       )}
 
       <Text style={[styles.urgencia, { color: corUrgencia() }]}>
@@ -39,7 +45,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderLeftWidth: 5,
   },
-  texto: { color: "#fff" },
+  texto: {
+    color: "#fff",
+  },
   urgencia: {
     marginTop: 5,
     fontWeight: "bold",
@@ -50,9 +58,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 10,
   },
-  videoTexto: {
-    color: "#2ecc71",
+  videoProblema: {
+    width: "100%",
+    height: 220,
+    borderRadius: 10,
     marginTop: 10,
-    fontWeight: "bold",
+    backgroundColor: "#000",
   },
 });

@@ -53,13 +53,13 @@ Antes de começar, você precisa ter instalado na sua máquina:
 **1. Clone o repositório**
 
 ```bash
-git clone https://github.com/GabrielTarone/fiap-cpad-cp1-FiapMaintenance-.git
+git clone https://github.com/GabrielTarone/fiap-cpad-cp2-FiapMaintenance.git
 ```
 
 **2. Acesse a pasta do projeto**
 
 ```bash
-cd fiap-cpad-cp1-FiapMaintenance-
+cd fiap-cpad-cp2-FiapMaintenance
 ```
 
 **3. Instale as dependências**
