@@ -37,24 +37,30 @@ export default function Reportar() {
   const { adicionarProblema } = useContext(SalasContext);
 
   function abrirOpcoesMidia() {
-    Alert.alert("Adicionar mídia", "Escolha uma opção", [
-      {
-        text: "Tirar foto",
-        onPress: abrirCamera,
-      },
-      {
-        text: "Gravar vídeo",
-        onPress: abrirCamera,
-      },
-      {
-        text: "Escolher da galeria",
-        onPress: selecionarMidia,
-      },
-      {
-        text: "Cancelar",
-        style: "cancel",
-      },
-    ]);
+    Alert.alert(
+      "Adicionar mídia",
+      "Escolha uma opção",
+      [
+        {
+          text: "Tirar foto",
+          onPress: abrirCamera,
+        },
+        {
+          text: "Gravar vídeo",
+          onPress: abrirCamera,
+        },
+        {
+          text: "Escolher da galeria",
+          onPress: selecionarMidia,
+        },
+        {
+          text: "Cancelar",
+          style: "cancel",
+          onPress: () => {},
+        },
+      ],
+      { cancelable: true },
+    );
   }
 
   /* Seleção de mídia*/

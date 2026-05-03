@@ -1,44 +1,45 @@
-import { Stack } from "expo-router";
-import { SalasProvider } from "../context/SalasContext";
+import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect, useState } from "react";
-import { View, ActivityIndicator } from "react-native";
+import { ActivityIndicator, View } from "react-native";
+import { SalasProvider } from "../context/SalasContext";
 import { getUsuarioLogado } from "../services/authService";
-import { useRouter, useSegments } from "expo-router";
 
 export default function Layout() {
-  const [usuario, setUsuario] = useState(null);
   const [carregando, setCarregando] = useState(true);
 
   const router = useRouter();
   const segments = useSegments();
+  const rotaAtual = segments.join("/");
 
   useEffect(() => {
-    verificarUsuario();
-  }, []);
+    async function verificarUsuarioInicial() {
+      await getUsuarioLogado();
+      setCarregando(false);
+    }
 
-  async function verificarUsuario() {
-    const user = await getUsuarioLogado();
-    setUsuario(user);
-    setCarregando(false);
-  }
+    verificarUsuarioInicial();
+  }, []);
 
   useEffect(() => {
     if (carregando) return;
 
-    const estaNaAuth = segments[0] === "login" || segments[0] === "cadastro";
+    async function protegerRotas() {
+      const user = await getUsuarioLogado();
+      const estaNaAuth = segments[0] === "login" || segments[0] === "cadastro";
 
-    // 🔒 NÃO LOGADO → manda pro login
-    if (!usuario && !estaNaAuth) {
-      router.replace("/login");
+      if (!user && !estaNaAuth) {
+        router.replace("/login");
+        return;
+      }
+
+      if (user && estaNaAuth) {
+        router.replace("/");
+      }
     }
 
-    // 🔓 LOGADO → impede voltar pro login
-    if (usuario && estaNaAuth) {
-      router.replace("/");
-    }
-  }, [usuario, carregando]);
+    protegerRotas();
+  }, [carregando, rotaAtual, router, segments]);
 
-  // 🔹 Loading
   if (carregando) {
     return (
       <View

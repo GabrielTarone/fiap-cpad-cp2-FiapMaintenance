@@ -20,10 +20,12 @@ async function salvarUsuarios(usuarios) {
 // 🔹 CADASTRAR USUÁRIO
 export async function cadastrar(nome, email, senha) {
   const usuarios = await getUsuarios();
+  const emailNormalizado = email.trim().toLowerCase();
+  const senhaNormalizada = senha.trim();
 
   // Verifica duplicidade
   const usuarioExiste = usuarios.find(
-    (u) => u.email.toLowerCase() === email.toLowerCase(),
+    (u) => u.email?.trim().toLowerCase() === emailNormalizado,
   );
 
   if (usuarioExiste) {
@@ -32,14 +34,15 @@ export async function cadastrar(nome, email, senha) {
 
   const novoUsuario = {
     id: Date.now().toString(),
-    nome,
-    email,
-    senha,
+    nome: nome.trim(),
+    email: emailNormalizado,
+    senha: senhaNormalizada,
   };
 
   const novosUsuarios = [...usuarios, novoUsuario];
 
   await salvarUsuarios(novosUsuarios);
+  await AsyncStorage.setItem(KEYS.USUARIO_LOGADO, JSON.stringify(novoUsuario));
 
   return novoUsuario;
 }
@@ -47,9 +50,13 @@ export async function cadastrar(nome, email, senha) {
 // 🔹 LOGIN
 export async function login(email, senha) {
   const usuarios = await getUsuarios();
+  const emailNormalizado = email.trim().toLowerCase();
+  const senhaNormalizada = senha.trim();
 
   const usuario = usuarios.find(
-    (u) => u.email.toLowerCase() === email.toLowerCase() && u.senha === senha,
+    (u) =>
+      u.email?.trim().toLowerCase() === emailNormalizado &&
+      u.senha === senhaNormalizada,
   );
 
   if (!usuario) {

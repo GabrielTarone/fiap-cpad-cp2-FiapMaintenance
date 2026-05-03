@@ -74,7 +74,7 @@ export default function Cadastro() {
 
       Alert.alert("Sucesso", "Conta criada com sucesso!");
 
-      router.replace("/login"); // volta para login
+      router.replace("/");
     } catch (err) {
       Alert.alert("Erro", err.message || "Erro ao cadastrar usuário");
     } finally {

@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { login } from "../services/authService";
 
 // 🔐 Importa o service
 
@@ -58,7 +59,7 @@ export default function Login() {
     try {
       setCarregando(true);
 
-      console.log(email, senha);
+      await login(email, senha);
 
       router.replace("/"); // vai pra home
       Alert.alert("Sucesso", "Login realizado!");
