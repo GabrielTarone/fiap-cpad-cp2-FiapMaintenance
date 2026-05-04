@@ -9,7 +9,6 @@ import { useContext, useRef, useState } from "react";
 import {
   Alert,
   Image,
-  Modal,
   StyleSheet,
   Text,
   TextInput,
@@ -24,7 +23,6 @@ export default function Reportar() {
   const [tempoGravacao, setTempoGravacao] = useState(0);
   const timerRef = useRef(null);
   const [gravando, setGravando] = useState(false);
-  const [opcoesMidiaVisible, setOpcoesMidiaVisible] = useState(false);
 
   const [, requestCameraPermission] = useCameraPermissions();
   const [, requestMicrophonePermission] = useMicrophonePermissions();
@@ -39,21 +37,30 @@ export default function Reportar() {
   const { adicionarProblema } = useContext(SalasContext);
 
   function abrirOpcoesMidia() {
-    setOpcoesMidiaVisible(true);
-  }
-
-  function cancelarOpcoesMidia() {
-    setOpcoesMidiaVisible(false);
-  }
-
-  function escolherCamera() {
-    setOpcoesMidiaVisible(false);
-    abrirCamera();
-  }
-
-  function escolherGaleria() {
-    setOpcoesMidiaVisible(false);
-    selecionarMidia();
+    Alert.alert(
+      "Adicionar mídia",
+      "Escolha uma opção",
+      [
+        {
+          text: "Tirar foto",
+          onPress: abrirCamera,
+        },
+        {
+          text: "Gravar vídeo",
+          onPress: abrirCamera,
+        },
+        {
+          text: "Escolher da galeria",
+          onPress: selecionarMidia,
+        },
+        {
+          text: "Cancelar",
+          style: "cancel",
+          onPress: () => {},
+        },
+      ],
+      { cancelable: true },
+    );
   }
 
   /* Seleção de mídia*/
@@ -206,48 +213,6 @@ export default function Reportar() {
     <View style={styles.container}>
       <Text style={styles.titulo}>Novo Problema</Text>
 
-      <Modal
-        transparent
-        visible={opcoesMidiaVisible}
-        animationType="fade"
-        onRequestClose={cancelarOpcoesMidia}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalConteudo}>
-            <Text style={styles.modalTitulo}>Adicionar mídia</Text>
-            <Text style={styles.modalDescricao}>Escolha uma opção</Text>
-
-            <TouchableOpacity
-              style={styles.modalOpcao}
-              onPress={escolherCamera}
-            >
-              <Text style={styles.modalOpcaoTexto}>Tirar foto</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.modalOpcao}
-              onPress={escolherCamera}
-            >
-              <Text style={styles.modalOpcaoTexto}>Gravar vídeo</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.modalOpcao}
-              onPress={escolherGaleria}
-            >
-              <Text style={styles.modalOpcaoTexto}>Escolher da galeria</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.modalOpcao, styles.modalCancelar]}
-              onPress={cancelarOpcoesMidia}
-            >
-              <Text style={styles.modalCancelarTexto}>Cancelar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
       {/* Campo computador */}
       <TextInput
         style={styles.input}
@@ -385,48 +350,6 @@ const styles = StyleSheet.create({
   anexoTexto: {
     color: "#2ecc71",
     marginBottom: 20,
-    fontWeight: "bold",
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.65)",
-    justifyContent: "center",
-    padding: 24,
-  },
-  modalConteudo: {
-    backgroundColor: "#1a1a1a",
-    borderRadius: 10,
-    padding: 18,
-  },
-  modalTitulo: {
-    color: "#fff",
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 6,
-  },
-  modalDescricao: {
-    color: "#aaa",
-    marginBottom: 14,
-  },
-  modalOpcao: {
-    backgroundColor: "#333",
-    padding: 14,
-    borderRadius: 8,
-    marginTop: 10,
-  },
-  modalOpcaoTexto: {
-    color: "#fff",
-    textAlign: "center",
-    fontWeight: "bold",
-  },
-  modalCancelar: {
-    backgroundColor: "transparent",
-    borderWidth: 1,
-    borderColor: "#555",
-  },
-  modalCancelarTexto: {
-    color: "#E1306C",
-    textAlign: "center",
     fontWeight: "bold",
   },
 });
